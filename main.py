@@ -32,28 +32,39 @@ def crop(x, y, w, h):
 	# undo the monitor scaling, couldn't find a way to get the unscaled cords from QML :(
 	return IMAGE.copy(x*SCALE, y*SCALE, w*SCALE, h*SCALE)
 
+def imageBytes(qImage):
+	byte_array = QByteArray()
+	buffer = QBuffer(byte_array)
+	buffer.open(QBuffer.ReadWrite)
+	qImage.save(buffer, 'PPM')
+	buffer.close()
+	return byte_array
+
 class Tools(QObject):
 	@Slot(float, float, float, float)
 	def ocr(self, x, y, w, h):
-		byte_array = QByteArray()
-		buffer = QBuffer(byte_array)
-		buffer.open(QBuffer.ReadWrite)
-		crop(x, y, w, h).save(buffer, 'PNG')
-		buffer.close()
 		stdout, stderr = subprocess.Popen(
 			['tesseract', '-', '-'],
 			stdin  = subprocess.PIPE,
 			stdout = subprocess.PIPE,
 			stderr = subprocess.PIPE,
 			text = False
-		).communicate(input = byte_array)
+		).communicate(input = imageBytes(crop(x, y, w, h)))
 		TEXT = stdout.decode('utf-8')
 		clipboard.setText(TEXT)
 		print(f"OCR'd Text:\n{TEXT}")
 	@Slot(float, float, float, float)
 	def qr(self, x, y, w, h):
-		# TODO Implement
-		print(f"Decoded data:\nTODO")
+		stdout, stderr = subprocess.Popen(
+			['zbarimg', '-'],
+			stdin  = subprocess.PIPE,
+			stdout = subprocess.PIPE,
+			stderr = subprocess.PIPE,
+			text = False
+		).communicate(input = imageBytes(crop(x, y, w, h)))
+		TEXT = stdout.decode('utf-8').replace('QR-Code:', '')
+		clipboard.setText(TEXT)
+		print(f"Decoded data:\n{TEXT}")
 	@Slot(float, float, float, float)
 	def copy(self, x, y, w, h):
 		clipboard.setImage(crop(x, y, w, h))
