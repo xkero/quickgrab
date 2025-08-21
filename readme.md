@@ -24,7 +24,7 @@ Quickshot calls all of the following via command line so you don't need any lang
 ## Usage
 
 Once installed you can then run quickshot via the `quickshot` command in a terminal or bind it to a key in your window manager/compositor.
-You can drag the screen to create a selection
+Once run you can drag anywhere on the screen to create a selection, underneath you'll see a row of buttons for functions to perform on it.
 
 ## Todo
 
