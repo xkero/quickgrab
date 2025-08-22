@@ -14,6 +14,7 @@ Optional: If using Hyprland you may want to add these window rules:
     # Stop Quickgrab window being tiled and animated
     windowrulev2 = float, class:^python3$, title:^Quickgrab$
     windowrulev2 = noanim, class:^python3$, title:^Quickgrab$
+    windowrulev2 = float, title:^(Save Image)$
 
 ## Dependencies
 
