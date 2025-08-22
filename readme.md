@@ -1,7 +1,7 @@
-Quickshot
+Quickgrab
 =========
 
-A simple screenshot utility with OCR (**O**ptical **C**haracter **R**ecognition via [Tesseract](https://github.com/tesseract-ocr/tesseract)) and QR code decoding (via [ZBar](https://github.com/mchehab/zbar))
+A simple GUI screenshot utility with direct access to OCR (**O**ptical **C**haracter **R**ecognition via [Tesseract](https://github.com/tesseract-ocr/tesseract)) and QR code decoding (via [ZBar](https://github.com/mchehab/zbar)).
 
 ![](https://github.com/user-attachments/assets/45c67274-b972-4287-a51d-4b08ef70da31 "Screenshot")
 
