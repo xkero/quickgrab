@@ -15,10 +15,11 @@ import sys
 import os
 import signal
 import datetime
-from PySide6.QtGui import QGuiApplication, QImage
+from PySide6.QtGui import QImage
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickImageProvider
 from PySide6.QtCore import QObject, Slot, QByteArray, QBuffer, QTimer
+from PySide6.QtWidgets import QApplication, QFileDialog
 
 IMAGE = QImage.fromData(IMAGE)
 
@@ -71,9 +72,12 @@ class Tools(QObject):
 		print('Copied to clipboard')
 	@Slot(float, float, float, float)
 	def save(self, x, y, w, h):
-		filename = '/tmp/screenshot.{date:%Y-%m-%d_%H:%M:%S}.png'.format(date = datetime.datetime.now())
-		crop(x, y, w, h).save(filename, 'PNG')
-		print(f"Saved image to {filename}")
+		name = 'screenshot.{date:%Y-%m-%d_%H:%M:%S}.png'.format(date = datetime.datetime.now())
+		filename, filetype = QFileDialog.getSaveFileName(None, 'Save Image', name, 'PNG (Portal Network Graphics) (*.png);;WebP (*.webp);;PPM (Portable Pixmap Format) (*.ppm);;JPEG (*.jpg);;BMP (Bitmap) (*.bmp)')
+		if filename:
+			crop(x, y, w, h).save(filename)
+			print(f"Saved image to {filename}")
+			print(f"{_}")
 	@Slot(str, float, float, float, float)
 	def upload(self, host, x, y, w, h):
 		# TODO Implement
@@ -85,8 +89,8 @@ def sigint_handler(*args):
 signal.signal(signal.SIGINT, sigint_handler)
 
 # Setup Qt app
-app = QGuiApplication(sys.argv)
-clipboard = QGuiApplication.clipboard()
+app = QApplication(sys.argv)
+clipboard = QApplication.clipboard()
 
 engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)

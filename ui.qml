@@ -167,7 +167,7 @@ ApplicationWindow {
 				ToolTip.text: 'Copy selection to clipboard\nShortcut: C'
 			}
 			Button {
-				text: 'Save'
+				text: 'Save As...'
 				icon.name: 'document-save'
 				icon.width: 32
 				icon.height: 32
@@ -178,7 +178,7 @@ ApplicationWindow {
 			}
 			Button {
 				id: uploadButton
-				text: 'Upload'
+				text: 'Upload...'
 				icon.name: 'upload-media'
 				icon.width: 32
 				icon.height: 32
