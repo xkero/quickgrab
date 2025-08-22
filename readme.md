@@ -10,6 +10,7 @@ A simple GUI screenshot utility with direct access to [OCR](https://en.wikipedia
 As the program is just a python file (`main.py`) and a qml file (`ui.qml`), no compilation is needed. Just run `install.sh` as root to copy the files or do it manually.
 
 Optional: If using Hyprland you may want to add these window rules:
+
     # Stop Quickgrab window being tiled and animated
     windowrulev2 = float, class:^python3$, title:^Quickgrab$
     windowrulev2 = noanim, class:^python3$, title:^Quickgrab$
