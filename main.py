@@ -72,7 +72,7 @@ class Tools(QObject):
 		print('Copied to clipboard')
 	@Slot(float, float, float, float)
 	def save(self, x, y, w, h):
-		name = 'screenshot.{date:%Y-%m-%d_%H:%M:%S}.png'.format(date = datetime.datetime.now())
+		name = os.path.expanduser('~/screenshot.{date:%Y-%m-%d_%H:%M:%S}.png'.format(date = datetime.datetime.now()))
 		filename, filetype = QFileDialog.getSaveFileName(None, 'Save Image', name, 'PNG (Portal Network Graphics) (*.png);;WebP (*.webp);;PPM (Portable Pixmap Format) (*.ppm);;JPEG (*.jpg);;BMP (Bitmap) (*.bmp)')
 		if filename:
 			crop(x, y, w, h).save(filename)
