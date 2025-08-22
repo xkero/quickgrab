@@ -144,7 +144,7 @@ ApplicationWindow {
 				onClicked: tools.ocr(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Read text in selection via Optical Character Recognition and store output into clipboard'
+				ToolTip.text: 'Read text in selection via Optical Character Recognition and store output into clipboard\nShortcut: T'
 			}
 			Button {
 				text: 'Decode'
@@ -154,7 +154,7 @@ ApplicationWindow {
 				onClicked: tools.qr(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Read QR code or other 2D barcode and store output into clipboard'
+				ToolTip.text: 'Read QR code or other 2D barcode and store output into clipboard\nShortcut: R'
 			}
 			Button {
 				text: 'Copy'
@@ -164,7 +164,7 @@ ApplicationWindow {
 				onClicked: tools.copy(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Copy selection to clipboard'
+				ToolTip.text: 'Copy selection to clipboard\nShortcut: C'
 			}
 			Button {
 				text: 'Save'
@@ -174,7 +174,7 @@ ApplicationWindow {
 				onClicked: tools.save(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Save selection to image file'
+				ToolTip.text: 'Save selection to image file\nShortcut: S'
 			}
 			Button {
 				id: uploadButton
@@ -209,7 +209,7 @@ ApplicationWindow {
 				onClicked: close()
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Quit and go back to desktop'
+				ToolTip.text: 'Quit and go back to desktop\nShortcut: Q or Escape'
 			}
 		}
 	}
