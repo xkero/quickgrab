@@ -1,7 +1,7 @@
 Quickgrab
 =========
 
-A simple GUI screenshot utility with direct access to OCR (**O**ptical **C**haracter **R**ecognition via [Tesseract](https://github.com/tesseract-ocr/tesseract)) and QR code decoding (via [ZBar](https://github.com/mchehab/zbar)).
+A simple GUI screenshot utility with direct access to [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) and QR code/barcode decoding.
 
 ![](https://github.com/user-attachments/assets/45c67274-b972-4287-a51d-4b08ef70da31 "Screenshot")
 
@@ -9,13 +9,18 @@ A simple GUI screenshot utility with direct access to OCR (**O**ptical **C**hara
 
 As the program is just a python file (`main.py`) and a qml file (`ui.qml`), no compilation is needed. Just run `install.sh` as root to copy the files or do it manually.
 
+Optional: If using Hyprland you may want to add these window rules:
+    # Stop Quickgrab window being tiled and animated
+    windowrulev2 = float, class:^python3$, title:^Quickgrab$
+    windowrulev2 = noanim, class:^python3$, title:^Quickgrab$
+
 ## Dependencies
 
 To run you'll need to install:
 * Python v3: You most likely already have this installed :).
 * [PySide6](https://pypi.org/project/PySide6/) & QtQuick: For GUI.
 
-Quickshot calls all of the following via command line so you don't need any language binding packages:
+Quickgrab calls all of the following via command line so you don't need any language binding packages:
 * [Grim](https://gitlab.freedesktop.org/emersion/grim): Used to take the actual screenshot.
 * [hyprctl](https://github.com/hyprwm/Hyprland): Needed for Hyprland support, specifically to get the active monitor.
 * [Tesseract](https://github.com/tesseract-ocr/tesseract): Needed for the OCR function.
