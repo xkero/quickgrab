@@ -1,11 +1,64 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+
 ApplicationWindow {
 	title: 'Quickgrab'
 	visible: true
 	visibility: 'FullScreen'
 	width: screenshot.width
 	height: screenshot.height
+	Connections {
+		target: tools
+		function onResult_signal(result) {
+			resultsText.text = result
+			results.open()
+		}
+	}
+	Popup {
+		id: results
+		visible: false
+		x: (parent.width - width) / 2
+		y: (parent.height - height) / 2
+		modal: true
+		popupType: Popup.Item
+		closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+		background: Rectangle {
+			color: 'black'
+			radius: 10
+			border.width: 1
+			border.color: 'gray'
+		}
+		contentItem: Column {
+			spacing: 10
+			Text {
+				text: 'Results:'
+				font.bold: true
+				font.pointSize: resultsText.font.pointSize * 1.5
+				width: parent.width
+				horizontalAlignment: Text.AlignHCenter
+				color: 'white'
+			}
+			Text {
+				id: resultsText
+				color: 'white'
+			}
+			Row {
+				spacing: 10
+				
+				Button {
+					text: 'Copy to clipboard'
+					onClicked: {
+						tools.copyResult()
+						results.close()
+					}
+				}
+				Button {
+					text: 'Close'
+					onClicked: results.close()
+				}
+			}
+		}
+	}
 	Item {
 		id: shortcuts
 		Shortcut {
@@ -144,7 +197,7 @@ ApplicationWindow {
 				onClicked: tools.ocr(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Read text in selection via Optical Character Recognition and store output into clipboard\nShortcut: T'
+				ToolTip.text: 'Read text in selection via Optical Character Recognition\nShortcut: T'
 			}
 			Button {
 				text: 'Decode'
@@ -154,7 +207,7 @@ ApplicationWindow {
 				onClicked: tools.qr(selection.x, selection.y, selection.width, selection.height)
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
-				ToolTip.text: 'Read QR code or other 2D barcode and store output into clipboard\nShortcut: R'
+				ToolTip.text: 'Decode QR code or other 2D barcode\nShortcut: R'
 			}
 			Button {
 				text: 'Copy'

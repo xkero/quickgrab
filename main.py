@@ -18,7 +18,7 @@ import datetime
 from PySide6.QtGui import QImage
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickImageProvider
-from PySide6.QtCore import QObject, Slot, QByteArray, QBuffer, QTimer
+from PySide6.QtCore import QObject, Slot, Signal, QByteArray, QBuffer, QTimer
 from PySide6.QtWidgets import QApplication, QFileDialog
 
 IMAGE = QImage.fromData(IMAGE)
@@ -42,6 +42,12 @@ def imageBytes(qImage):
 	return byte_array
 
 class Tools(QObject):
+	result_signal = Signal(str)
+	_result = ''
+	@Slot()
+	def copyResult(self):
+		clipboard.setText(self._result)
+		print('Copied to clipboard')
 	@Slot(float, float, float, float)
 	def ocr(self, x, y, w, h):
 		stdout, stderr = subprocess.Popen(
@@ -51,9 +57,9 @@ class Tools(QObject):
 			stderr = subprocess.PIPE,
 			text = False
 		).communicate(input = imageBytes(crop(x, y, w, h)))
-		TEXT = stdout.decode('utf-8')
-		clipboard.setText(TEXT)
-		print(f"OCR'd Text:\n{TEXT}")
+		self._result = stdout.decode('utf-8')
+		print(f"OCR'd Text:\n{self._result}")
+		self.result_signal.emit(self._result)
 	@Slot(float, float, float, float)
 	def qr(self, x, y, w, h):
 		stdout, stderr = subprocess.Popen(
@@ -63,9 +69,9 @@ class Tools(QObject):
 			stderr = subprocess.PIPE,
 			text = False
 		).communicate(input = imageBytes(crop(x, y, w, h)))
-		TEXT = stdout.decode('utf-8').replace('QR-Code:', '')
-		clipboard.setText(TEXT)
-		print(f"Decoded data:\n{TEXT}")
+		self._result = stdout.decode('utf-8').replace('QR-Code:', '')
+		print(f"Decoded data:\n{self._result}")
+		self.result_signal.emit(self._result)
 	@Slot(float, float, float, float)
 	def copy(self, x, y, w, h):
 		clipboard.setImage(crop(x, y, w, h))
@@ -77,7 +83,6 @@ class Tools(QObject):
 		if filename:
 			crop(x, y, w, h).save(filename)
 			print(f"Saved image to {filename}")
-			print(f"{_}")
 	@Slot(str, float, float, float, float)
 	def upload(self, host, x, y, w, h):
 		# TODO Implement
