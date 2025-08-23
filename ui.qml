@@ -22,6 +22,10 @@ ApplicationWindow {
 		modal: true
 		popupType: Popup.Item
 		closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+		Shortcut {
+			sequences: ['Escape', 'Q']
+			onActivated: { results.visible? results.close() : close() }
+		}
 		background: Rectangle {
 			color: 'black'
 			radius: 10
@@ -61,10 +65,6 @@ ApplicationWindow {
 	}
 	Item {
 		id: shortcuts
-		Shortcut {
-			sequences: ['Escape', 'Q']
-			onActivated: close()
-		}
 		Shortcut {
 			sequence: 'T'
 			onActivated: tools.ocr(selection.x, selection.y, selection.width, selection.height)
