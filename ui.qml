@@ -115,7 +115,7 @@ ApplicationWindow {
 		height: 50
 		x: {
 			let pos = selection.x
-			if(pos + toolbar.width > screenshot.width) return screenshot.width - toolbar.width
+			if(pos + childrenRect.width > screenshot.width) return screenshot.width - childrenRect.width
 			else return pos
 		}
 		y: {
