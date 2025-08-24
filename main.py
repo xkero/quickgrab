@@ -4,11 +4,20 @@
 import subprocess
 import json
 
-json = json.loads(subprocess.run(['hyprctl', 'monitors', 'all', '-j'], capture_output=True, text=True, check=True).stdout)
-MONITOR = next((item['name'] for item in json if item.get('focused')), None) # get name of focused monitor
+WMs = {
+	'hyprland': ['hyprctl', 'monitors', 'all', '-j'],
+	'sway': ['swaymsg', '-t', 'get_outputs']
+}
+for WM, command in WMs.items():
+	try:
+		JSON = json.loads(subprocess.run(command, capture_output=True, text=True, check=True).stdout)
+		break
+	except subprocess.CalledProcessError as e: pass
+
+MONITOR = next((item['name'] for item in JSON if item.get('focused')), None) # get name of focused monitor
 # Take screenshot with grim, set format to ppm (more memory, but faster) and read directly from stdout to memory to save writing temp file to disk
 IMAGE = subprocess.run(['grim', '-o', MONITOR, '-t', 'ppm', '-'], capture_output=True, check=True).stdout
-SCALE = float(next((item['scale'] for item in json if item.get('focused')), None)) # get scale of focused monitor
+SCALE = float(next((item['scale'] for item in JSON if item.get('focused')), None)) # get scale of focused monitor
 
 # Load up GUI
 import sys

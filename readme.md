@@ -24,7 +24,6 @@ To run you'll need to install:
 
 Quickgrab calls all of the following via command line so you don't need any language binding packages:
 * [Grim](https://gitlab.freedesktop.org/emersion/grim): Used to take the actual screenshot.
-* [hyprctl](https://github.com/hyprwm/Hyprland): Needed for Hyprland support, specifically to get the active monitor.
 * [Tesseract](https://github.com/tesseract-ocr/tesseract): Needed for the OCR function.
 * [ZBar](https://github.com/mchehab/zbar): Needed for QR code decoding.
 
@@ -38,7 +37,7 @@ Once run you can drag anywhere on the screen to create a selection, underneath y
 Help welcome! Especially if you have experience with QtQuick.
 
 Features that still need implementing:
-  * Only currently supports Hyprland, but I want to add support for other Wayland compositors or systems.
+  * Only currently supports Hyprland & Sway, but I want to add support for other Wayland compositors or systems.
   * Clicking a window to have the selection fit it automatically.
   * Resize and movement handles to alter an existing selection.
   * Ability to upload selections to online services.
