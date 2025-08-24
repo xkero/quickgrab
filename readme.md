@@ -7,6 +7,12 @@ A simple GUI screenshot utility with direct access to [OCR](https://en.wikipedia
 
 ## Install
 
+### Archlinux
+
+Available on the AUR as `quickgrab-git` install via your prefered AUR helper, e.g. `pikaur -S quickgrab-git`
+
+### Everyone else
+
 As the program is just a python file (`main.py`) and a qml file (`ui.qml`), no compilation is needed. Just run `install.sh` as root to copy the files or do it manually.
 
 Optional: If using Hyprland you may want to add these window rules:
