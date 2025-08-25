@@ -13,6 +13,12 @@ ApplicationWindow {
 			resultsText.text = result
 			results.open()
 		}
+		function onSelection_signal(x, y, w, h) {
+			selection.x = x
+			selection.y = y
+			selection.width = w
+			selection.height = h
+		}
 	}
 	Popup {
 		id: results
@@ -159,8 +165,8 @@ ApplicationWindow {
 			selection.width = Math.abs(lastPressPoint.x - mouse.x)
 			selection.height =  Math.abs(lastPressPoint.y - mouse.y)
 		}
-		onReleased: {
-			
+		onReleased: (mouse) => {
+			if(lastPressPoint.x === mouse.x && lastPressPoint.y === mouse.y) tools.pickWindow(mouse.x, mouse.y)
 		}
 	}
 	Rectangle {
