@@ -44,10 +44,10 @@ import sys
 import os
 import signal
 import datetime
-from PySide6.QtGui import QImage
+from PySide6.QtGui import QImage, QSurfaceFormat
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickImageProvider
-from PySide6.QtCore import QObject, Slot, Signal, QByteArray, QBuffer, QTimer
+from PySide6.QtCore import Qt, QObject, Slot, Signal, QByteArray, QBuffer, QTimer
 from PySide6.QtWidgets import QApplication, QFileDialog
 
 IMAGE = QImage.fromData(IMAGE)
@@ -144,6 +144,10 @@ signal.signal(signal.SIGINT, sigint_handler)
 # Setup Qt app
 app = QApplication(sys.argv)
 clipboard = QApplication.clipboard()
+
+format = QSurfaceFormat()
+format.setAlphaBufferSize(8)
+QSurfaceFormat.setDefaultFormat(format)
 
 engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)
