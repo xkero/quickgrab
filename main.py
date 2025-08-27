@@ -159,7 +159,16 @@ tools = Tools()
 engine.rootContext().setContextProperty('tools', tools)
 
 DIR = os.path.dirname(os.path.realpath(__file__)) # get directory script is in even if called via symlink
-engine.load(os.path.join(DIR, 'ui.qml')) # load ui qml
+UIQML = os.path.join(DIR, 'ui.qml')
+engine.load(UIQML) # load ui qml
+
+if not engine.rootObjects():
+	print(f"Error: failed to load gui.\nQML file: {UIQML}")
+	sys.exit(-1)
+
+rootObject = engine.rootObjects()[0]
+rootObject.setFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+rootObject.showFullScreen()
 
 # Create timer to break from Qt's event loop and let python process signals so we can close via Ctrl+C in terminal
 timer = QTimer()
