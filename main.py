@@ -42,6 +42,7 @@ match WM:
 # Load up GUI
 import sys
 import os
+import shutil
 import signal
 import datetime
 from PySide6.QtGui import QImage, QSurfaceFormat
@@ -73,6 +74,7 @@ def imageBytes(qImage):
 class Tools(QObject):
 	result_signal = Signal(str)
 	selection_signal = Signal(float, float, float, float)
+	missing_signal = Signal(str)
 	_result = ''
 	@Slot()
 	def copyResult(self):
@@ -165,6 +167,9 @@ engine.load(UIQML) # load ui qml
 if not engine.rootObjects():
 	print(f"Error: failed to load gui.\nQML file: {UIQML}")
 	sys.exit(-1)
+
+for command in ['tesseract', 'zbarimg']:
+	if shutil.which(command) is None: tools.missing_signal.emit(command)
 
 rootObject = engine.rootObjects()[0]
 rootObject.setFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)

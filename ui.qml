@@ -19,6 +19,18 @@ ApplicationWindow {
 			selection.width = w
 			selection.height = h
 		}
+		function onMissing_signal(command) {
+			switch(command) {
+				case 'tesseract':
+					ocrButton.enabled = false
+					ocrButton.ToolTip.text = "Tesseract doesn't appear to be installed so OCR function is unavailable."
+					break;
+				case 'zbarimg':
+					decodeButton.enabled = false
+					decodeButton.ToolTip.text = "ZBar doesn't appear to be installed so QR/Barcode decoding is unavailable."
+					break;
+			}
+		}
 	}
 	Popup {
 		id: results
@@ -196,6 +208,7 @@ ApplicationWindow {
 			anchors.verticalCenter: parent.verticalCenter
 			spacing: 10
 			Button {
+				id: ocrButton
 				text: 'OCR'
 				icon.name: 'edit-select-text'
 				icon.width: 32
@@ -206,6 +219,7 @@ ApplicationWindow {
 				ToolTip.text: 'Read text in selection via Optical Character Recognition\nShortcut: T'
 			}
 			Button {
+				id: decodeButton
 				text: 'Decode'
 				icon.name: 'view-barcode-qr'
 				icon.width: 32
@@ -216,6 +230,7 @@ ApplicationWindow {
 				ToolTip.text: 'Decode QR code or other 2D barcode\nShortcut: R'
 			}
 			Button {
+				id: copyButton
 				text: 'Copy'
 				icon.name: 'edit-copy'
 				icon.width: 32
@@ -226,6 +241,7 @@ ApplicationWindow {
 				ToolTip.text: 'Copy selection to clipboard\nShortcut: C'
 			}
 			Button {
+				id: saveAsButton
 				text: 'Save As...'
 				icon.name: 'document-save'
 				icon.width: 32
@@ -261,6 +277,7 @@ ApplicationWindow {
 				}
 			}
 			Button {
+				id: closeButton
 				text: 'Close'
 				icon.name: 'application-exit'
 				icon.width: 32
