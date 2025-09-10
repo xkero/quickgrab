@@ -106,45 +106,36 @@ ApplicationWindow {
 		anchors.fill: parent
 		fillMode: Image.PreserveAspectCrop
 	}
-	Rectangle {
-		id: darkenLeft
+	component Dim: Rectangle {
 		x: 0
 		y: 0
+		color: 'black'
+		opacity: 0.5
+		visible: selection.visible
+	}
+	Dim {
+		id: dimLeft
 		width: selection.x
 		height: screenshot.height
-		color: 'black'
-		opacity: 0.5
-		visible: selection.visible
 	}
-	Rectangle {
-		id: darkenRight
+	Dim {
+		id: dimRight
 		x: selection.x + selection.width
-		y: 0
 		width: screenshot.width
 		height: screenshot.height
-		color: 'black'
-		opacity: 0.5
-		visible: selection.visible
 	}
-	Rectangle {
-		id: darkenTop
+	Dim {
+		id: dimTop
 		x: selection.x
-		y: 0
 		width: selection.width
 		height: selection.y
-		color: 'black'
-		opacity: 0.5
-		visible: selection.visible
 	}
-	Rectangle {
-		id: darkenBottom
+	Dim {
+		id: dimBottom
 		x: selection.x
 		y: selection.y + selection.height
 		width:  selection.width
 		height: screenshot.height
-		color: 'black'
-		opacity: 0.5
-		visible: selection.visible
 	}
 	Rectangle {
 		id: selection
@@ -196,71 +187,49 @@ ApplicationWindow {
 		}
 		color: 'transparent'
 		visible: selection.visible
-		MouseArea {
-			id: dragArea
-			anchors.fill: parent
-			drag.target: parent
-			onReleased: {
-			// Optional: Handle button release actions here
-			}
-		}
 		Row {
 			anchors.verticalCenter: parent.verticalCenter
 			spacing: 10
-			Button {
+			component ToolButton: Button {
+				icon.width: 32
+				icon.height: 32
+				ToolTip.visible: hovered
+				ToolTip.delay: 1000
+			}
+			ToolButton {
 				id: ocrButton
 				text: 'OCR'
 				icon.name: 'edit-select-text'
-				icon.width: 32
-				icon.height: 32
 				onClicked: tools.ocr(selection.x, selection.y, selection.width, selection.height)
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Read text in selection via Optical Character Recognition\nShortcut: T'
 			}
-			Button {
+			ToolButton {
 				id: decodeButton
 				text: 'Decode'
 				icon.name: 'view-barcode-qr'
-				icon.width: 32
-				icon.height: 32
 				onClicked: tools.qr(selection.x, selection.y, selection.width, selection.height)
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Decode QR code or other 2D barcode\nShortcut: R'
 			}
-			Button {
+			ToolButton {
 				id: copyButton
 				text: 'Copy'
 				icon.name: 'edit-copy'
-				icon.width: 32
-				icon.height: 32
 				onClicked: tools.copy(selection.x, selection.y, selection.width, selection.height)
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Copy selection to clipboard\nShortcut: C'
 			}
-			Button {
+			ToolButton {
 				id: saveAsButton
 				text: 'Save As...'
 				icon.name: 'document-save'
-				icon.width: 32
-				icon.height: 32
 				onClicked: tools.save(selection.x, selection.y, selection.width, selection.height)
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Save selection to image file\nShortcut: S'
 			}
-			Button {
+			ToolButton {
 				id: uploadButton
 				text: 'Upload...'
 				icon.name: 'upload-media'
-				icon.width: 32
-				icon.height: 32
 				checked: uploadMenu.visible
 				onClicked: uploadMenu.popup()
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Upload selection to online host'
 				Menu {
 					id: uploadMenu
@@ -276,15 +245,11 @@ ApplicationWindow {
 					}
 				}
 			}
-			Button {
+			ToolButton {
 				id: closeButton
 				text: 'Close'
 				icon.name: 'application-exit'
-				icon.width: 32
-				icon.height: 32
 				onClicked: close()
-				ToolTip.visible: hovered
-				ToolTip.delay: 1000
 				ToolTip.text: 'Quit and go back to desktop\nShortcut: Q or Escape'
 			}
 		}
