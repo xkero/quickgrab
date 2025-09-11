@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 2.15
 
 ApplicationWindow {
 	title: 'Quickgrab'
@@ -177,24 +178,49 @@ ApplicationWindow {
 		height: 50
 		x: {
 			let pos = selection.x
-			if(pos + childrenRect.width > screenshot.width) return screenshot.width - childrenRect.width
+			if(toolbar.sideways) {
+				pos += selection.width + 10
+				if(pos < screenshot.width - childrenRect.width) return pos // check right
+				else {
+					pos = selection.x - 10 - childrenRect.width
+					if(pos > 0) return pos // check left
+				}
+				//toolbar.y = selection.y + (selection.height - childrenRect.height) / 2
+				return selection.x + (selection.width - childrenRect.width) / 2
+			}
+			else if(pos + childrenRect.width > screenshot.width) return screenshot.width - childrenRect.width
 			else return pos
 		}
 		y: {
 			let pos = selection.height + selection.y + 10
-			if(pos + 48 > screenshot.height) return selection.y - toolbar.height - 10
+			toolbar.sideways = false
+			if(pos + toolbar.height > screenshot.height) { // check bottom
+				pos = selection.y - toolbar.height - 10
+				if(pos >= 0) return pos // check top
+				else {
+					//if() return selection.y + (selection.height - childrenRect.height) / 2
+					toolbar.sideways = true
+					return selection.y
+				}
+			}
 			else return pos
 		}
 		color: 'transparent'
 		visible: selection.visible
-		Row {
-			anchors.verticalCenter: parent.verticalCenter
-			spacing: 10
+		property var sideways: false
+		GridLayout {
+			id: toolbarGrid
+			flow: toolbar.sideways? GridLayout.TopToBottom : GridLayout.LeftToRight
+			uniformCellHeights: toolbar.sideways? false : true
+			uniformCellWidths: toolbar.sideways? true : false
+			rowSpacing: 10
+			columnSpacing: 10
 			component ToolButton: Button {
 				icon.width: 32
 				icon.height: 32
 				ToolTip.visible: hovered
 				ToolTip.delay: 1000
+				Layout.fillWidth: true
 			}
 			ToolButton {
 				id: ocrButton
