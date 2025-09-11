@@ -61,13 +61,17 @@ ApplicationWindow {
 				horizontalAlignment: Text.AlignHCenter
 				color: 'white'
 			}
-			Text {
-				id: resultsText
-				color: 'white'
+			ScrollView {
+				width: screenshot.width - 50
+				height: screenshot.height - 200
+				Text {
+					id: resultsText
+					color: 'white'
+				}
 			}
 			Row {
 				spacing: 10
-				
+				anchors.horizontalCenter: parent.horizontalCenter
 				Button {
 					text: 'Copy to clipboard'
 					onClicked: {
