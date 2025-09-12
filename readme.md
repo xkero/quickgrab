@@ -3,7 +3,7 @@ Quickgrab
 
 A simple GUI screenshot utility with direct access to [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) and QR code/barcode decoding.
 
-![](https://github.com/user-attachments/assets/45c67274-b972-4287-a51d-4b08ef70da31 "Screenshot")
+![](https://github.com/user-attachments/assets/13988ba6-2dc6-46b1-8742-70ba917d2b1f "Screenshot")
 
 ## Install
 
