@@ -150,9 +150,11 @@ ApplicationWindow {
 		height: 0
 		color: 'transparent'
 		visible: false
-		property var done: false
 		border.color: 'white'
 		border.width: 1
+		HoverHandler { id: selectionHover }
+		property bool hovered: selectionHover.hovered
+		property var done: false
 	}
 	MouseArea {
 		anchors.fill: parent
@@ -183,22 +185,39 @@ ApplicationWindow {
 	component Resizer: Rectangle {
 		x: -(width / 2)
 		y: -(height / 2)
-		width: 15
-		height: 15
-		radius: 15
+		width: height || 20
+		height: width || 20
+		radius: Math.max(width, height)
 		color: 'white'
 		visible: selection.done
+		opacity: hovered || dragging? 1 : selection.hovered? 0.5 : 0
+		property bool hovered: false
+		property bool dragging: false
 	}
 	component ResizerMouseArea: MouseArea {
 		anchors.fill: parent
 		drag.target: parent
 		drag.axis: Drag.XAndYAxis
 		drag.threshold: 0
+		hoverEnabled: true
+		onEntered: parent.hovered = true
+		onExited:  parent.hovered = false
 		property var lastPoint: Qt.point(0,0)
 		onPressed: (mouse) => {
 			lastPoint.x = parent.x
 			lastPoint.y = parent.y
 		}
+		onPositionChanged: (mouse) => {
+			if (mouse.buttons === Qt.LeftButton) {
+				parent.dragging = true
+				if(typeof dragged == 'function') dragged(mouse)
+			}
+		}
+		onReleased: {
+			parent.dragging = false
+			//parent.hovered  = false
+		}
+	}
 	Resizer {
 		id: selectionDrag
 		x: selection.x + (selection.width / 2) - (width / 2)
@@ -225,7 +244,7 @@ ApplicationWindow {
 			drag.maximumX: selection.x + selection.width - 50
 			drag.minimumY: -(height / 2)
 			drag.maximumY: selection.y + selection.height - 50
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.x = parent.x + (width / 2)
 				selection.y = parent.y + (height / 2)
 				selection.width += lastPoint.x - parent.x
@@ -245,7 +264,7 @@ ApplicationWindow {
 			drag.axis: Drag.YAxis
 			drag.minimumY: -(height / 2)
 			drag.maximumY: selection.y + selection.height - 50
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.y = parent.y + (height / 2)
 				selection.height += lastPoint.y - parent.y
 				
@@ -264,7 +283,7 @@ ApplicationWindow {
 			drag.maximumX: screenshot.width - (width / 2)
 			drag.minimumY: -(height / 2)
 			drag.maximumY: selection.y + selection.height - 50
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.width = parent.x - selection.x + (width / 2)
 				selection.y = parent.y + (height / 2)
 				selection.height += lastPoint.y - parent.y
@@ -283,7 +302,7 @@ ApplicationWindow {
 			drag.axis: Drag.XAxis
 			drag.minimumX: -(width / 2)
 			drag.maximumX: selection.x + selection.width - 50
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.x = parent.x + (width / 2)
 				selection.width += lastPoint.x - parent.x
 				
@@ -302,7 +321,7 @@ ApplicationWindow {
 			drag.maximumX: selection.x + selection.width - 50
 			drag.minimumY: selection.y + 50 - height
 			drag.maximumY: screenshot.height - (height / 2)
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.x = parent.x + (width / 2)
 				selection.height = parent.y - selection.y + (height / 2)
 				selection.width += lastPoint.x - parent.x
@@ -321,7 +340,7 @@ ApplicationWindow {
 			drag.axis: Drag.YAxis
 			drag.minimumY: selection.y + 50 - height
 			drag.maximumY: screenshot.height - (height / 2)
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.height -= lastPoint.y - parent.y
 				
 				lastPoint.x = parent.x
@@ -339,7 +358,7 @@ ApplicationWindow {
 			drag.maximumX: screenshot.width - (width / 2)
 			drag.minimumY: selection.y + 50 - height
 			drag.maximumY: screenshot.height - (height / 2)
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.width = parent.x - selection.x + (width / 2)
 				selection.height = parent.y - selection.y + (height / 2)
 				
@@ -358,7 +377,7 @@ ApplicationWindow {
 			drag.axis: Drag.XAxis
 			drag.minimumX: selection.x + 50 - width
 			drag.maximumX: screenshot.width - (width / 2)
-			onPositionChanged: (mouse) => {
+			function dragged (mouse) {
 				selection.width = parent.x - selection.x + (width / 2)
 				
 				lastPoint.x = parent.x
