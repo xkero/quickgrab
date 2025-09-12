@@ -150,6 +150,7 @@ ApplicationWindow {
 		height: 0
 		color: 'transparent'
 		visible: false
+		property var done: false
 		border.color: 'white'
 		border.width: 1
 	}
@@ -159,10 +160,10 @@ ApplicationWindow {
 		height: screenshot.height
 		cursorShape: Qt.CrossCursor
 		focus: true
-		property var dragging: false
 		propagateComposedEvents: true
 		property var lastPressPoint: Qt.point(0,0)
 		onPressed: (mouse) => {
+			selection.done = false
 			lastPressPoint.x = mouse.x
 			lastPressPoint.y = mouse.y
 			selection.visible = true
@@ -171,10 +172,183 @@ ApplicationWindow {
 			selection.x = Math.min(lastPressPoint.x , mouse.x)
 			selection.y = Math.min(lastPressPoint.y , mouse.y)
 			selection.width = Math.abs(lastPressPoint.x - mouse.x)
-			selection.height =  Math.abs(lastPressPoint.y - mouse.y)
+			selection.height = Math.abs(lastPressPoint.y - mouse.y)
+			
 		}
 		onReleased: (mouse) => {
 			if(lastPressPoint.x === mouse.x && lastPressPoint.y === mouse.y) tools.pickWindow(mouse.x, mouse.y)
+			selection.done = true
+		}
+	}
+	component Resizer: Rectangle {
+		x: -(width / 2)
+		y: -(height / 2)
+		width: 15
+		height: 15
+		radius: 15
+		color: 'white'
+		visible: selection.done
+	}
+	component ResizerMouseArea: MouseArea {
+		anchors.fill: parent
+		drag.target: parent
+		drag.axis: Drag.XAndYAxis
+		drag.threshold: 0
+		property var lastPoint: Qt.point(0,0)
+		onPressed: (mouse) => {
+			lastPoint.x = parent.x
+			lastPoint.y = parent.y
+		}
+	}
+	Resizer {
+		id: resizeTopLeft
+		x: selection.x - (width / 2)
+		y: selection.y - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeFDiagCursor
+			drag.minimumX: -(width / 2)
+			drag.maximumX: selection.x + selection.width - 50
+			drag.minimumY: -(height / 2)
+			drag.maximumY: selection.y + selection.height - 50
+			onPositionChanged: (mouse) => {
+				selection.x = parent.x + (width / 2)
+				selection.y = parent.y + (height / 2)
+				selection.width += lastPoint.x - parent.x
+				selection.height += lastPoint.y - parent.y
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeTopMiddle
+		x: selection.x + (selection.width / 2) - (width / 2)
+		y: selection.y - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeVerCursor
+			drag.axis: Drag.YAxis
+			drag.minimumY: -(height / 2)
+			drag.maximumY: selection.y + selection.height - 50
+			onPositionChanged: (mouse) => {
+				selection.y = parent.y + (height / 2)
+				selection.height += lastPoint.y - parent.y
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeTopRight
+		x: selection.x + selection.width - (width / 2)
+		y: selection.y - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeBDiagCursor
+			drag.minimumX: selection.x + 50 - width
+			drag.maximumX: screenshot.width - (width / 2)
+			drag.minimumY: -(height / 2)
+			drag.maximumY: selection.y + selection.height - 50
+			onPositionChanged: (mouse) => {
+				selection.width = parent.x - selection.x + (width / 2)
+				selection.y = parent.y + (height / 2)
+				selection.height += lastPoint.y - parent.y
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeLeftMiddle
+		x: selection.x - (width / 2)
+		y: selection.y + (selection.height / 2) - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeHorCursor
+			drag.axis: Drag.XAxis
+			drag.minimumX: -(width / 2)
+			drag.maximumX: selection.x + selection.width - 50
+			onPositionChanged: (mouse) => {
+				selection.x = parent.x + (width / 2)
+				selection.width += lastPoint.x - parent.x
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeBottomLeft
+		x: selection.x - (width / 2)
+		y: selection.y + selection.height - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeBDiagCursor
+			drag.minimumX: -(width / 2)
+			drag.maximumX: selection.x + selection.width - 50
+			drag.minimumY: selection.y + 50 - height
+			drag.maximumY: screenshot.height - (height / 2)
+			onPositionChanged: (mouse) => {
+				selection.x = parent.x + (width / 2)
+				selection.height = parent.y - selection.y + (height / 2)
+				selection.width += lastPoint.x - parent.x
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeBottomMiddle
+		x: selection.x + (selection.width / 2) - (width / 2)
+		y: selection.y + selection.height - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeVerCursor
+			drag.axis: Drag.YAxis
+			drag.minimumY: selection.y + 50 - height
+			drag.maximumY: screenshot.height - (height / 2)
+			onPositionChanged: (mouse) => {
+				selection.height -= lastPoint.y - parent.y
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	Resizer {
+		id: resizeBottomRight
+		x: selection.x + selection.width - (width / 2)
+		y: selection.y + selection.height - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeFDiagCursor
+			drag.minimumX: selection.x + 50 - width
+			drag.maximumX: screenshot.width - (width / 2)
+			drag.minimumY: selection.y + 50 - height
+			drag.maximumY: screenshot.height - (height / 2)
+			onPositionChanged: (mouse) => {
+				selection.width = parent.x - selection.x + (width / 2)
+				selection.height = parent.y - selection.y + (height / 2)
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
+		}
+	}
+	
+	Resizer {
+		id: resizeRightMiddle
+		x: selection.x + selection.width - (width / 2)
+		y: selection.y + (selection.height / 2) - (height / 2)
+		ResizerMouseArea {
+			cursorShape: Qt.SizeHorCursor
+			drag.axis: Drag.XAxis
+			drag.minimumX: selection.x + 50 - width
+			drag.maximumX: screenshot.width - (width / 2)
+			onPositionChanged: (mouse) => {
+				selection.width = parent.x - selection.x + (width / 2)
+				
+				lastPoint.x = parent.x
+				lastPoint.y = parent.y
+			}
 		}
 	}
 	Rectangle {
