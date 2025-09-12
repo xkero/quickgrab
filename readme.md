@@ -44,8 +44,8 @@ Help welcome! Especially if you have experience with QtQuick.
 
 Features that still need implementing:
   * Only currently supports Hyprland & Sway, but I want to add support for other Wayland compositors or systems.
-  * Resize and movement handles to alter an existing selection.
   * Ability to upload selections to online services.
+  * Ability to customise toolbar by adding custom tools, reordering, or removing others.
 
 ## License
 
