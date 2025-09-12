@@ -199,6 +199,21 @@ ApplicationWindow {
 			lastPoint.x = parent.x
 			lastPoint.y = parent.y
 		}
+	Resizer {
+		id: selectionDrag
+		x: selection.x + (selection.width / 2) - (width / 2)
+		y: selection.y + (selection.height / 2) - (height / 2)
+		width: 50
+		height: 50
+		ResizerMouseArea {
+			cursorShape: Qt.SizeAllCursor
+			drag.axis: Drag.XAndYAxis
+			drag.target: selection
+			drag.minimumX: 0
+			drag.maximumX: screenshot.width - selection.width
+			drag.minimumY: 0
+			drag.maximumY: screenshot.height - selection.height
+		}
 	}
 	Resizer {
 		id: resizeTopLeft
