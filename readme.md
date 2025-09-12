@@ -47,6 +47,14 @@ Features that still need implementing:
   * Ability to upload selections to online services.
   * Ability to customise toolbar by adding custom tools, reordering, or removing others.
 
+## Development
+
+To assist with development I've written a script called `runonedit.sh` which as it's name implies runs a command and when certain files are edited kills that command and reruns it; this allows a very fast develop & test loop. I pair this by running a nested `sway` instance inside my host desktop (Hyprland) which keeps Quickgrab's fullscreen window from being disruptive when it restarts. After starting sway I then run the below command to restart Quickgrab whenever I save changes in my text editor: 
+
+    SWAYSOCK=/run/user/"$UID"/sway-ipc."$UID".*.sock WAYLAND_DISPLAY='wayland-2' ./runonedit.sh main.py ui.qml -- ./main.py
+
+Setting `SWAYSOCK` is needed so Quickgrab can communicate with sway (to get active monitor, scaling, window positions, etc). `WAYLAND_DISPLAY` is so it opens inside the nested desktop, you may need to change this depending on your setup.
+
 ## License
 
 All code unless specified is GNU GPL version 3 or later
