@@ -49,7 +49,7 @@ from PySide6.QtGui import QImage, QSurfaceFormat
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuick import QQuickImageProvider
 from PySide6.QtCore import Qt, QObject, Slot, Signal, QByteArray, QBuffer, QTimer
-from PySide6.QtWidgets import QApplication, QFileDialog
+from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
 IMAGE = QImage.fromData(IMAGE)
 
@@ -76,6 +76,10 @@ class Tools(QObject):
 	selection_signal = Signal(float, float, float, float)
 	missing_signal = Signal(str)
 	_result = ''
+	@Slot()
+	def fsDialog(self):
+		rootObject.hide()
+		fsDialog.show()
 	@Slot()
 	def copyResult(self):
 		clipboard.setText(self._result)
@@ -174,6 +178,19 @@ for command in ['tesseract', 'zbarimg']:
 rootObject = engine.rootObjects()[0]
 rootObject.setFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 rootObject.showFullScreen()
+
+fsDialog = QMessageBox()
+fsDialog.setWindowTitle('Quickgrab')
+fsDialog.setText('Quickgrab was forced out of fullscreen.\nTry and go back to fullscreen or just quit?')
+fsDialogOk = fsDialog.addButton('Fullscreen', QMessageBox.AcceptRole)
+fsDialogQuit = fsDialog.addButton('Quit', QMessageBox.RejectRole)
+
+def goFS():
+	fsDialog.hide()
+	rootObject.showFullScreen()
+
+fsDialogOk.clicked.connect(goFS)
+fsDialogQuit.clicked.connect(lambda: app.quit())
 
 # Create timer to break from Qt's event loop and let python process signals so we can close via Ctrl+C in terminal
 timer = QTimer()

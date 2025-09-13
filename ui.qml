@@ -5,7 +5,21 @@ import QtQuick.Layouts 2.15
 ApplicationWindow {
 	title: 'Quickgrab'
 	visible: true
-	visibility: 'FullScreen'
+	visibility: Window.FullScreen
+	// visibility can change multiple times when switching in/out of fullscreen, so use a timer to "debounce" and avoid thinking we went out of fullscreen again
+	property int fsTimer: 0
+	Timer {
+		id: fsTimer
+		interval: 100
+		onTriggered: {
+			if(visibility === Window.FullScreen) return
+			tools.fsDialog()
+		}
+	}
+	onVisibilityChanged: () => {
+		if(fsTimer.running) return
+		fsTimer.start()
+	}
 	width: screenshot.width
 	height: screenshot.height
 	Connections {
